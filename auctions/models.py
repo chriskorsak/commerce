@@ -25,13 +25,13 @@ class Listing(models.Model):
 class Bid(models.Model):
   listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
   price = models.DecimalField(max_digits=8, decimal_places=2)
-  bidder = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+  bidder = models.ForeignKey(User, on_delete=models.CASCADE)
 
   def __str__(self):
     return f"Listing:{self.listing} price:{self.price}"
 
 class Comment(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
   date = models.DateField(auto_now_add=True)
   comment = models.CharField(max_length=256)
   listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
