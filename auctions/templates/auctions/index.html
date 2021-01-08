@@ -3,5 +3,15 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+      {% for listing in listings %}
+      <section>
+        <h3>{{ listing.title }}</h3>
+        <h4>{{ listing.price }}</h4>
+        <img src="{{ listing.photo }}" alt="Photo of {{ listing.title }}">
+        <p>{{ listing.description }}</p>
+        <p>Created: {{ listing.date }}</p>
+        <p>Listed by: {{ user.username }}</p>
+      </section>
+      {% endfor %}
+
 {% endblock %}

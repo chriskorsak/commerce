@@ -3,7 +3,7 @@ from django.contrib import admin
 from . models import User, Listing, Bid, Comment
 
 class UserAdmin(admin.ModelAdmin):
-  list_display = ("username", "first_name", "last_name", "email")
+  list_display = ("username", "first_name", "last_name", "email", "id")
 
 class ListingAdmin(admin.ModelAdmin):
   list_display = ("user", "title", "price", "date")
