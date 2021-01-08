@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import *
+from .forms import *
 
 
 def index(request):
@@ -80,5 +81,7 @@ def create_listing(request):
 
     # save listing object to database:
     listing.save()
-    
+
+  # form = CreateEntryForm() 
+  # return render(request, "auctions/create-listing.html", {'form': form} )
   return render(request, "auctions/create-listing.html")
