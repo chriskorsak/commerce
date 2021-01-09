@@ -40,4 +40,7 @@ class Comment(models.Model):
     return f"Date:{self.date} Comment:{self.comment} Listing:{self.listing}"
 
 
+# need to create a watchlist model or maybe just an attribute in User class. not sure, probably better to create its own model, would follow the same logic how i've don comment or bid, for example.
+
+
 

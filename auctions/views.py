@@ -85,3 +85,16 @@ def create_listing(request):
   # form = CreateEntryForm() 
   # return render(request, "auctions/create-listing.html", {'form': form} )
   return render(request, "auctions/create-listing.html")
+
+def listing(request, listing_id):
+  listing = Listing.objects.get(pk=listing_id)
+  return render(request, "auctions/listing.html", {
+    "listing": listing
+  })
+
+def watchlist(request, listing_id):
+  user = request.user
+  listing = Listing.objects.get(pk=listing_id)
+  print(user, listing)
+  return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+
