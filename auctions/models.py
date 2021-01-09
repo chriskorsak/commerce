@@ -14,7 +14,7 @@ class Listing(models.Model):
   title = models.CharField(max_length=64)
   price = models.DecimalField(max_digits=8, decimal_places=2)
   description = models.TextField(max_length=256)
-  date = models.DateField(auto_now_add=True)
+  date = models.DateTimeField(auto_now_add=True)
   photo = models.URLField(max_length=200, blank=True)
   category = models.CharField(max_length=32, blank=True)
 
@@ -32,7 +32,7 @@ class Bid(models.Model):
 
 class Comment(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
-  date = models.DateField(auto_now_add=True)
+  date = models.DateTimeField(auto_now_add=True)
   comment = models.CharField(max_length=256)
   listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
 
