@@ -24,4 +24,15 @@
       </div>
     </div>
 
+    {% if user.is_authenticated %}
+    <form action="{% url 'bid' listing.id %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="number" step="0.01" name="price" class="form-control" placeholder="Bid Amount">
+      </div>
+      <input type="submit" value="Submit Bid" class="btn btn-sm btn-primary">
+    </form>
+    {% endif %}
+
+
 {% endblock %}

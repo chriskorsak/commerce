@@ -90,7 +90,7 @@ def listing(request, listing_id):
   listing = Listing.objects.get(pk=listing_id)
 
   user = request.user
-  if user.is_authenticated:
+  if request.user.is_authenticated:
     if user.watchlist.filter(pk=listing_id):
       message = "Watching item"
     else:
@@ -125,4 +125,15 @@ def watchlist(request):
   return render(request, "auctions/watchlist.html", {
     "watchlist": watchlist
   })
+
+@login_required(login_url='login')
+def bid(request, listing_id):
+  if request.method == "POST":
+    #get user and listing from listing id
+    user = request.user
+    listing = Listing.objects.get(pk=listing_id)
+
+    return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+    #bid not hitting database yet work on this!
+
 
