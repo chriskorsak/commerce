@@ -4,10 +4,13 @@
     <h2>{{ listing.title }}</h2>
     
     <!-- add to watchlist form -->
-    <form action="{% url 'watchlist' listing.id %}" method="POST">
+    {% if user.is_authenticated %}
+    {{ message }}
+    <form action="{% url 'add-remove-watchlist' listing.id %}" method="POST">
       {% csrf_token %}
       <input type="submit" value="Watchlist" class="btn btn-primary">
     </form>
+    {% endif %}
 
     <div class="row listing-container">
       <div class="col-md-2">

@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
+  watchlist = models.ManyToManyField('Listing', blank=True, related_name="watched")
 
   def __str__(self):
     return f"{self.username} ({self.first_name} {self.last_name})"
@@ -39,8 +40,13 @@ class Comment(models.Model):
   def __str__(self):
     return f"Date:{self.date} Comment:{self.comment} Listing:{self.listing}"
 
+# class Watchlist(models.Model):
+#   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
+#   watchlist = models.ForeignKey(Listing, blank=True, on_delete=models.CASCADE, related_name="watched")
 
-# need to create a watchlist model or maybe just an attribute in User class. not sure, probably better to create its own model, would follow the same logic how i've don comment or bid, for example.
+#   def __str__(self):
+#     return f"User: {self.user} Watchlist:{self.watchlist}"
+
 
 
 
