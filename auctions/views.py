@@ -88,10 +88,24 @@ def create_listing(request):
 
 def listing(request, listing_id):
   listing = Listing.objects.get(pk=listing_id)
-  return render(request, "auctions/listing.html", {
-    "listing": listing
-  })
 
+  user = request.user
+  if user.is_authenticated:
+    if user.watchlist.filter(pk=listing_id):
+      message = "Watching item"
+    else:
+      message = "Not watching item"
+
+    return render(request, "auctions/listing.html", {
+      "listing": listing,
+      "message": message
+    })
+  else:
+    return render(request, "auctions/listing.html", {
+      "listing": listing
+    })
+
+@login_required(login_url='login')
 def add_remove_watchlist(request, listing_id):
   if request.method == "POST":
     #get user and listing from listing id
@@ -100,10 +114,8 @@ def add_remove_watchlist(request, listing_id):
     #add/remove listing to user's watchlist
     if user.watchlist.filter(pk=listing_id):
       user.watchlist.remove(listing)
-      # message = "Removed from watchlist"
     else:
       user.watchlist.add(listing)
-      # message = "Added to watchlist"
 
     return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 

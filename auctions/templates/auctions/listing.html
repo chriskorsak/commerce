@@ -8,7 +8,7 @@
     {{ message }}
     <form action="{% url 'add-remove-watchlist' listing.id %}" method="POST">
       {% csrf_token %}
-      <input type="submit" value="Watchlist" class="btn btn-primary">
+      <input type="submit" value="Add/Remove from watchlist" class="btn btn-sm btn-primary">
     </form>
     {% endif %}
 
