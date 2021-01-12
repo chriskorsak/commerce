@@ -71,7 +71,7 @@ def create_listing(request):
   if request.method == "POST":
     user = request.user
     title = request.POST["title"]
-    price = request.POST["price"]
+    price = float(request.POST["price"])
     description = request.POST["description"]
     photo = request.POST["photo"]
     category = request.POST["category"]
@@ -82,8 +82,11 @@ def create_listing(request):
     # save listing object to database:
     listing.save()
 
+  #####this commented out code was from using the form class in forms.py
   # form = CreateEntryForm() 
   # return render(request, "auctions/create-listing.html", {'form': form} )
+  ######
+
   return render(request, "auctions/create-listing.html")
 
 def listing(request, listing_id):
@@ -129,11 +132,41 @@ def watchlist(request):
 @login_required(login_url='login')
 def bid(request, listing_id):
   if request.method == "POST":
-    #get user and listing from listing id
-    user = request.user
+    #get user, listing from listing id, price from bid form on listing page
+    bidder = request.user
     listing = Listing.objects.get(pk=listing_id)
+    price = float(request.POST["price"])
+    
+    # if no bids yet, check to make sure first bid at least equals starting price
+    if listing.bids.count() == 0:
+      # apply listing, price and bidder to new bid object
+      bid = Bid(listing=listing, price=price, bidder=bidder)
+      #convert listing price to float for comparison (is this correct way to do???)
+      listing.price = float(listing.price)
+      #check to see if bid is greater than current price or bids
+      if bid.price >= listing.price:
+        #update listing price with newest bid
+        listing.price = bid.price
+        listing.save()
+        #save bid
+        bid.save()
+        return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+      else:
+        return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 
-    return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
-    #bid not hitting database yet work on this!
+    #if there's already bids on listing, check to make sure greater than current price   
+    else:
+      # apply listing, price and bidder to new bid object
+      bid = Bid(listing=listing, price=price, bidder=bidder)
+      #check to see if bid is greater than current price or bids
+      if bid.price > listing.price:
+        #update listing price with newest bid
+        listing.price = bid.price
+        listing.save()
+        #save bid
+        bid.save()
+        return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+      else:
+        return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 
 
