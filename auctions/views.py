@@ -93,8 +93,11 @@ def listing(request, listing_id):
   listing = Listing.objects.get(pk=listing_id)
   #get all bids on listing to display on page
   bids = listing.bids.all()
-
+  # get user
   user = request.user
+  # get all listing comments
+  comments = listing.comments.all()
+
   if request.user.is_authenticated:
     if user.watchlist.filter(pk=listing_id):
       message = "Watching item"
@@ -105,6 +108,7 @@ def listing(request, listing_id):
       "listing": listing,
       "watchlist_message": message,
       "bids": bids,
+      "comments": comments
     })
   else:
     return render(request, "auctions/listing.html", {
@@ -178,3 +182,17 @@ def bid(request, listing_id):
       else:
         messages.add_message(request, messages.INFO, 'Bid is not high enough.', extra_tags='alert alert-warning')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+
+def comment(request, listing_id):
+  if request.method == "POST":
+    #get comment from form, user, listing from listing id
+    comment_text = request.POST["comment_text"]
+    user = request.user
+    listing = Listing.objects.get(pk=listing_id)
+
+    #create new Comment object with comment text, listing_id, and user
+    comment = Comment(user=user, comment=comment_text, listing=listing)
+    #save comment to database
+    comment.save()
+
+    return HttpResponseRedirect(reverse("listing", args=(listing_id,)))

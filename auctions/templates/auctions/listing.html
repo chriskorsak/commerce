@@ -31,7 +31,7 @@
         <div class="form-group">
           <input type="number" step="0.01" required name="price" class="form-control" placeholder="Bid Amount">
         </div>
-        <input type="submit" value="Submit Bid" class="btn btn-sm btn-primary">
+        <input type="submit" value="Submit" class="btn btn-sm btn-primary">
       </form>
 
       <h3>Bid History</h3>
@@ -46,6 +46,29 @@
           <td>${{ bid.price }}</td>
         </tr>
       {% endfor %}
+      </table>
+      
+      <h3>Leave a Comment</h3>
+      <form action="{% url 'comment' listing.id %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="text" required name="comment_text" class="form-control" placeholder="Comment">
+        </div>
+        <input type="submit" value="Submit" class="btn btn-sm btn-primary">
+      </form>
+
+      <h3>Comments</h3>
+      <ul>
+      {% for comment in comments %}
+          <li>
+            On {{ comment.date }}, {{ comment.user.username }} wrote:<br>
+            {{ comment.comment }}
+          </li>
+      {% endfor %}
+      </ul>
+
+    {% else %}
+    <p>(Sign in to bid,see bid history, and comments.)</p>  
 
     {% endif %}
 
