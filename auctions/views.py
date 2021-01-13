@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -90,18 +91,22 @@ def create_listing(request):
   return render(request, "auctions/create-listing.html")
 
 def listing(request, listing_id):
+  #get listing from listing id
   listing = Listing.objects.get(pk=listing_id)
+  #get all bids on listing to display on page
+  bids = listing.bids.all()
 
   user = request.user
   if request.user.is_authenticated:
     if user.watchlist.filter(pk=listing_id):
       message = "Watching item"
     else:
-      message = "Not watching item"
-
+      message = ""
+    
     return render(request, "auctions/listing.html", {
       "listing": listing,
-      "message": message
+      "watchlist_message": message,
+      "bids": bids,
     })
   else:
     return render(request, "auctions/listing.html", {
@@ -119,6 +124,7 @@ def add_remove_watchlist(request, listing_id):
       user.watchlist.remove(listing)
     else:
       user.watchlist.add(listing)
+      messages.add_message(request, messages.INFO, 'Watching item!')
 
     return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 
@@ -150,8 +156,11 @@ def bid(request, listing_id):
         listing.save()
         #save bid
         bid.save()
+
+        messages.add_message(request, messages.INFO, 'Bid successful!')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
       else:
+        messages.add_message(request, messages.INFO, 'Bid is not high enough.')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 
     #if there's already bids on listing, check to make sure greater than current price   
@@ -165,8 +174,9 @@ def bid(request, listing_id):
         listing.save()
         #save bid
         bid.save()
+
+        messages.add_message(request, messages.INFO, 'Bid successful!')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
       else:
+        messages.add_message(request, messages.INFO, 'Bid is not high enough.')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
-
-
