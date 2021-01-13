@@ -82,11 +82,9 @@ def create_listing(request):
 
     # save listing object to database:
     listing.save()
-
-  #####this commented out code was from using the form class in forms.py
-  # form = CreateEntryForm() 
-  # return render(request, "auctions/create-listing.html", {'form': form} )
-  ######
+    
+    messages.add_message(request, messages.INFO, 'Listing created!', extra_tags='alert alert-primary')
+    return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
 
   return render(request, "auctions/create-listing.html")
 
@@ -124,7 +122,7 @@ def add_remove_watchlist(request, listing_id):
       user.watchlist.remove(listing)
     else:
       user.watchlist.add(listing)
-      messages.add_message(request, messages.INFO, 'Watching item!')
+      messages.add_message(request, messages.INFO, 'Watching item', extra_tags='alert alert-primary')
 
     return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 
@@ -139,9 +137,9 @@ def watchlist(request):
 def bid(request, listing_id):
   if request.method == "POST":
     #get user, listing from listing id, price from bid form on listing page
-    bidder = request.user
     listing = Listing.objects.get(pk=listing_id)
     price = float(request.POST["price"])
+    bidder = request.user
     
     # if no bids yet, check to make sure first bid at least equals starting price
     if listing.bids.count() == 0:
@@ -153,17 +151,17 @@ def bid(request, listing_id):
       if bid.price >= listing.price:
         #update listing price with newest bid
         listing.price = bid.price
+        #save listing and bid objects
         listing.save()
-        #save bid
         bid.save()
 
-        messages.add_message(request, messages.INFO, 'Bid successful!')
+        messages.add_message(request, messages.INFO, 'Bid successful!', extra_tags='alert alert-primary')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
       else:
-        messages.add_message(request, messages.INFO, 'Bid is not high enough.')
+        messages.add_message(request, messages.INFO, 'Bid is not high enough.', extra_tags='alert alert-warning')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 
-    #if there's already bids on listing, check to make sure greater than current price   
+    #if there's already bids on listing, check to make sure GREATER than current price   
     else:
       # apply listing, price and bidder to new bid object
       bid = Bid(listing=listing, price=price, bidder=bidder)
@@ -171,12 +169,12 @@ def bid(request, listing_id):
       if bid.price > listing.price:
         #update listing price with newest bid
         listing.price = bid.price
+        #save listing and bid 
         listing.save()
-        #save bid
         bid.save()
 
-        messages.add_message(request, messages.INFO, 'Bid successful!')
+        messages.add_message(request, messages.INFO, 'Bid successful!', extra_tags='alert alert-info')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
       else:
-        messages.add_message(request, messages.INFO, 'Bid is not high enough.')
+        messages.add_message(request, messages.INFO, 'Bid is not high enough.', extra_tags='alert alert-warning')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
