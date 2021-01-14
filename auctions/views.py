@@ -205,7 +205,7 @@ def listing_categories(request):
   #iterate through listings and extract and add to categories list if unique
   for listing in listings:
     # capitalize category before trying to add to list
-    listing.category = listing.category.capitalize()
+    # listing.category = listing.category.capitalize()
     
     if listing.category not in categories:
       categories.append(listing.category)
@@ -215,4 +215,13 @@ def listing_categories(request):
 
   return render(request, "auctions/listing-categories.html", {
     "categories": categories
+  })
+
+def category(request, category):
+  #figure out how to get all listings with this category
+  listings = Listing.objects.filter(category=category)
+  print(listings)
+  return render(request, "auctions/category.html", {
+    "listings": listings,
+    "category": category
   })
