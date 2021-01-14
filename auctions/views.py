@@ -183,6 +183,7 @@ def bid(request, listing_id):
         messages.add_message(request, messages.INFO, 'Bid is not high enough.', extra_tags='alert alert-warning')
         return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 
+@login_required(login_url='login')
 def comment(request, listing_id):
   if request.method == "POST":
     #get comment from form, user, listing from listing id
@@ -196,3 +197,22 @@ def comment(request, listing_id):
     comment.save()
 
     return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+
+def listing_categories(request):
+  categories = []
+  #get all listings
+  listings = Listing.objects.all()
+  #iterate through listings and extract and add to categories list if unique
+  for listing in listings:
+    # capitalize category before trying to add to list
+    listing.category = listing.category.capitalize()
+    
+    if listing.category not in categories:
+      categories.append(listing.category)
+  
+  #sort categories
+  categories.sort()
+
+  return render(request, "auctions/listing-categories.html", {
+    "categories": categories
+  })
