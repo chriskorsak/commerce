@@ -18,6 +18,7 @@ class Listing(models.Model):
   date = models.DateTimeField(auto_now_add=True)
   photo = models.URLField(max_length=200, blank=True)
   category = models.CharField(max_length=32, blank=True)
+  status = models.BooleanField(default=True)
 
   # returns a string representation of the Listing object
   def __str__(self):

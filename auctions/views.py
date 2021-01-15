@@ -100,11 +100,11 @@ def listing(request, listing_id):
   # get all listing comments
   comments = listing.comments.all()
 
-  #testing out how to end an auction
-  if user == listing_creator:
-    item_status = True
-  else:
-    item_status = False
+  # #Check listing open/closed status
+  # if listing.status == False:
+  #   listing_status = "Auction Closed"
+  # else:
+  #   listing_status = None
 
 
   if request.user.is_authenticated:
@@ -117,8 +117,8 @@ def listing(request, listing_id):
       "listing": listing,
       "watchlist_message": message,
       "bids": bids,
-      "comments": comments,
-      "item_status": item_status
+      "comments": comments
+      # "listing_status": listing_status
     })
   else:
     return render(request, "auctions/listing.html", {
@@ -245,6 +245,10 @@ def close_listing(request, listing_id):
 
     if user == listing_creator:
       messages.add_message(request, messages.INFO, 'Auction closed!', extra_tags='alert alert-info')
+      # change listing status to False (which means auction is closed)
+      listing.status = False
+      listing.save()
+
       return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
     
     return HttpResponseRedirect(reverse("listing", args=(listing_id,)))

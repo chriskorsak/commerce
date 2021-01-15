@@ -9,11 +9,13 @@
     </form>
     {{ watchlist_message }}
 
-    <!-- close listing if user created listing -->
-    <form action="{% url 'close-listing' listing.id %}" method="POST">
-      {% csrf_token %}
-      <input type="submit" value="Close Listing">
-    </form>
+    {% if listing.status %}
+      <!-- close listing if user created listing -->
+      <form action="{% url 'close-listing' listing.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Close Listing">
+      </form>
+    {% endif %}
 
     {% endif %}
     <h2>{{ listing.title }}</h2>
@@ -33,9 +35,8 @@
 
     {% if user.is_authenticated %}
 
-      {% if item_status %}
-        <div>TEST TO SEE IF PRESENT DEPENDING ON ITEM STATUS</div>
-      {% endif %}
+      {% if listing.status %}
+      
       <h3>Place a bid:</h3>
       <form action="{% url 'bid' listing.id %}" method="POST">
         {% csrf_token %}
@@ -44,6 +45,8 @@
         </div>
         <input type="submit" value="Submit" class="btn btn-sm btn-primary">
       </form>
+
+      {% endif %}
 
       <h3>Bid History</h3>
       <table class="table table-striped">
