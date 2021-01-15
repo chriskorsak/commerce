@@ -84,6 +84,9 @@ def create_listing(request):
 
     # save listing object to database:
     listing.save()
+
+    # automatically add listing to listing creator's watchlist
+    user.watchlist.add(listing)
     
     messages.add_message(request, messages.INFO, 'Listing created!', extra_tags='alert alert-primary')
     return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
@@ -164,6 +167,9 @@ def bid(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     price = float(request.POST["price"])
     bidder = request.user
+
+    # automatically add listing to listing bidder's watchlist
+    bidder.watchlist.add(listing)
     
     # if no bids yet, check to make sure first bid at least equals starting price
     if listing.bids.count() == 0:
@@ -238,9 +244,8 @@ def listing_categories(request):
   })
 
 def category(request, category):
-  #figure out how to get all listings with this category
+  #get all listings with this category
   listings = Listing.objects.filter(category=category)
-  print(listings)
   return render(request, "auctions/category.html", {
     "listings": listings,
     "category": category
