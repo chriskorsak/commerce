@@ -226,8 +226,8 @@ def comment(request, listing_id):
 
 def listing_categories(request):
   categories = []
-  #get all listings
-  listings = Listing.objects.all()
+  #get all active listings with a category
+  listings = Listing.objects.filter(status=True).exclude(category="")
   #iterate through listings and extract and add to categories list if unique
   for listing in listings:
     # capitalize category before trying to add to list
@@ -245,7 +245,7 @@ def listing_categories(request):
 
 def category(request, category):
   #get all listings with this category
-  listings = Listing.objects.filter(category=category)
+  listings = Listing.objects.filter(category=category, status=True)
   return render(request, "auctions/category.html", {
     "listings": listings,
     "category": category
