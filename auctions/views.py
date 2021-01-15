@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -100,25 +101,34 @@ def listing(request, listing_id):
   # get all listing comments
   comments = listing.comments.all()
 
-  # #Check listing open/closed status
-  # if listing.status == False:
-  #   listing_status = "Auction Closed"
-  # else:
-  #   listing_status = None
+  #only if user is logged in:
 
-
+  #message if listing on user's watchlist
   if request.user.is_authenticated:
     if user.watchlist.filter(pk=listing_id):
-      message = "Watching item"
+      watchlist_message = "Watching item"
     else:
-      message = ""
+      watchlist_message = "Not watching item"
+
+    #create variable which allows listing creator to use 'end listing' button on listing page
+    if user == listing_creator:
+      user_is_creator = True
+    else:
+      user_is_creator = False
+
+    #find max bid for listing using 'latest' function
+    if bids:
+      max_bid = bids.latest('price')
+    else:
+      max_bid = None
     
     return render(request, "auctions/listing.html", {
       "listing": listing,
-      "watchlist_message": message,
+      "watchlist_message": watchlist_message,
       "bids": bids,
-      "comments": comments
-      # "listing_status": listing_status
+      "comments": comments,
+      "user_is_creator": user_is_creator,
+      "max_bid": max_bid
     })
   else:
     return render(request, "auctions/listing.html", {
@@ -136,7 +146,6 @@ def add_remove_watchlist(request, listing_id):
       user.watchlist.remove(listing)
     else:
       user.watchlist.add(listing)
-      messages.add_message(request, messages.INFO, 'Watching item', extra_tags='alert alert-primary')
 
     return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
 
