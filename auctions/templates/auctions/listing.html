@@ -8,6 +8,13 @@
       <input type="submit" value="Add/Remove from watchlist" class="btn btn-sm btn-primary">
     </form>
     {{ watchlist_message }}
+
+    <!-- close listing if user created listing -->
+    <form action="{% url 'close-listing' listing.id %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="Close Listing">
+    </form>
+
     {% endif %}
     <h2>{{ listing.title }}</h2>
 
@@ -25,6 +32,10 @@
     </div>
 
     {% if user.is_authenticated %}
+
+      {% if item_status %}
+        <div>TEST TO SEE IF PRESENT DEPENDING ON ITEM STATUS</div>
+      {% endif %}
       <h3>Place a bid:</h3>
       <form action="{% url 'bid' listing.id %}" method="POST">
         {% csrf_token %}

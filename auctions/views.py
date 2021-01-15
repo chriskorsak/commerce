@@ -95,8 +95,17 @@ def listing(request, listing_id):
   bids = listing.bids.all()
   # get user
   user = request.user
+  # get creator of listing
+  listing_creator = listing.user
   # get all listing comments
   comments = listing.comments.all()
+
+  #testing out how to end an auction
+  if user == listing_creator:
+    item_status = True
+  else:
+    item_status = False
+
 
   if request.user.is_authenticated:
     if user.watchlist.filter(pk=listing_id):
@@ -108,7 +117,8 @@ def listing(request, listing_id):
       "listing": listing,
       "watchlist_message": message,
       "bids": bids,
-      "comments": comments
+      "comments": comments,
+      "item_status": item_status
     })
   else:
     return render(request, "auctions/listing.html", {
@@ -225,3 +235,16 @@ def category(request, category):
     "listings": listings,
     "category": category
   })
+
+def close_listing(request, listing_id):
+  if request.method == "POST":
+    #get user and compare to user who created listing
+    user = request.user
+    listing = Listing.objects.get(pk=listing_id)
+    listing_creator = listing.user
+
+    if user == listing_creator:
+      messages.add_message(request, messages.INFO, 'Auction closed!', extra_tags='alert alert-info')
+      return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
+    
+    return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
