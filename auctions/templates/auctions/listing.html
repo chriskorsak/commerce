@@ -28,7 +28,9 @@
         {% endif %}
         
         <!-- display auction winner if there's a bid, and listing is closed -->
-        {% if max_bid and not listing.status %}
+        {% if max_bid.bidder == user and not listing.status %}
+          <h4>You won the auction!</h4>
+        {% elif max_bid and not listing.status %}
           <h4>Auction Winner: {{ max_bid.bidder.username }}</h4>
         {% elif not max_bid and not listing.status %}
           <h4>Auction Closed</h4>
