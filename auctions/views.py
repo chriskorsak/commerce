@@ -6,17 +6,14 @@ from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
 from .models import *
-from .forms import *
-
+# from .forms import *
 
 def index(request):
     return render(request, "auctions/index.html", {
     # "listings": Listing.objects.all()
     "listings": Listing.objects.filter(status=True)
   })
-
 
 def login_view(request):
     if request.method == "POST":
@@ -73,11 +70,12 @@ def register(request):
 def create_listing(request):
   if request.method == "POST":
     user = request.user
-    title = request.POST["title"]
+    # .title() capitalizes each word
+    title = request.POST["title"].title()
     price = float(request.POST["price"])
     description = request.POST["description"]
     photo = request.POST["photo"]
-    category = request.POST["category"]
+    category = request.POST["category"].capitalize()
 
     # create new listing object with above variables gathered from create listing form:
     listing = Listing(user=user, title=title, price=price, description=description, photo=photo, category=category)
@@ -229,10 +227,7 @@ def listing_categories(request):
   #get all active listings with a category
   listings = Listing.objects.filter(status=True).exclude(category="")
   #iterate through listings and extract and add to categories list if unique
-  for listing in listings:
-    # capitalize category before trying to add to list
-    # listing.category = listing.category.capitalize()
-    
+  for listing in listings:    
     if listing.category not in categories:
       categories.append(listing.category)
   
