@@ -46,7 +46,7 @@
 
       <!-- show bid form if listing is active. Dont show if user is listing creator -->
       {% if listing.status and not user_is_creator %}     
-        <h3>Place a bid:</h3>
+        <h3>Place a bid</h3>
         <form action="{% url 'bid' listing.id %}" method="POST">
           {% csrf_token %}
           <div class="form-group">
@@ -82,8 +82,9 @@
       <h3>Comments</h3>
       <ul>
       {% for comment in comments %}
-        <li>
-          On {{ comment.date }}, {{ comment.user.username }} wrote:<br>
+        <li class="comment">
+          On {{ comment.date }}, {{ comment.user.username }} wrote:
+          <br>
           {{ comment.comment }}
         </li>
       {% endfor %}
