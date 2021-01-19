@@ -5,7 +5,7 @@
     {% if user.is_authenticated %}
       <form action="{% url 'add-remove-watchlist' listing.id %}" method="POST">
         {% csrf_token %}
-        <input type="submit" value="{{ watchlist_message }}" class="btn btn-sm btn-primary">
+        <input type="submit" value="{{ watchlist_message }}" class="btn btn-sm btn-primary watchlist-button">
       </form>
     {% endif %}
     
@@ -69,8 +69,9 @@
         </tr>
       {% endfor %}
       </table>
-
+      
       <h3>Leave a Comment</h3>
+      <div class="comment-section">
       <form action="{% url 'comment' listing.id %}" method="POST">
         {% csrf_token %}
         <div class="form-group">
@@ -89,6 +90,7 @@
         </li>
       {% endfor %}
       </ul>
+      </div>
 
     {% endif %}
 

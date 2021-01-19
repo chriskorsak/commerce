@@ -1,61 +1,121 @@
+/* import google font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
+
+/* main page sections */
 body {
-    
+  font-family: 'Montserrat', sans-serif;
 }
 
 header {
-  padding: 3%;
-  background-color: #18454a;
+  padding: 1%;
+  background-color: #2a525d;
 }
 
 main {
   padding: 3%;
 }
 
+/* general element styles */
 h1,
 h2 {
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-weight: 500;
 }
 
 h1 {
   font-size: 3em;
   letter-spacing: .2em;
   color: #ffffff;
-  background-color: #ff5a59;
-  padding: .5em;
+  background-color: #f96a6a;
+  padding: 1%;
+  border-left: solid 7px #ffffff;
+  border-radius: 5px;
 }
 
-a {
-  color: #3e8188;
-}
-
-a:hover {
-  color: #3a6371;
-}
-
-.btn-primary {
-  background-color:  #3e8188;
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: #3a6371;
+h3 {
+  margin-top: 1em;
 }
 
 .img-small {
   width: 100%;
 }
 
+/* this is in header. tells you if you're logged in */
 .authentication-message {
-  color: #a3a6a9;
+  color: #cdcccc;
 }
 
 .italic {
   font-style: italic;
 }
 
-li.comment {
+li {
   list-style-type: none;
+}
+
+/* nav links in header */
+ul.nav a {
+  color: #b1c0c3;
+}
+
+ul.nav a:hover {
+  color: #537378;
+}
+
+/* main links on page */
+h3 a,
+li a,
+p a {
+  color: #f96a6a;
+}
+
+h3 a:hover,
+li a:hover,
+p a:hover {
+  color: #537378;
+  text-decoration: none;
+}
+
+/* form submit buttons */
+.btn-primary {
+  background-color: #f96a6a;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #b44e4e;
+  border: none;
+}
+
+.watchlist-button {
+  background-color: #537378;
+}
+
+.watchlist-button:hover {
+  background-color: #2a525d;
+}
+
+/* comment section of listing.html */
+div.comment-section {
+  background-color: rgb(245, 245, 245);
+  padding: 1%;
+}
+
+li.comment {
   padding: 15px 25px;
   margin: 15px 0px;
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(235, 235, 235);
+}
+
+/* alerts at top of page after form submit */
+p.alert-primary,
+p.alert-warning {
+  background-color: #b1c0c3 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* input box shadow color when input is in focus state */
+.form-control:focus {
+  box-shadow: 0px 0px 1px 1px #b1c0c3;
+  border: 1px solid #537378;
 }

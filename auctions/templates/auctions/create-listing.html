@@ -4,10 +4,10 @@
   <form action="{% url 'create-listing' %}" method="POST">
     {% csrf_token %}
     <div class="form-group">
-      <input type="text" name="title" class="form-control" placeholder="Title">
+      <input type="text" name="title" class="form-control" placeholder="Title" required>
     </div>
     <div class="form-group">
-      <input type="number" step="0.01" name="price" class="form-control" placeholder="Starting Bid">
+      <input type="number" step="0.01" name="price" class="form-control" placeholder="Starting Bid" required>
     </div>
     <div class="form-group">
       <textarea class="form-control" name="description" placeholder="Description"></textarea>
